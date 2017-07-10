@@ -1,0 +1,189 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jun 26, 2017, 3:14:58 PM
+    Author     : Kenya Guzman
+*/
+body{
+    background-color: #364b71;
+    color: white;
+
+}
+h1{
+    font-family: 'Courgette', cursive;
+}
+h2{
+    font-family: 'Abel', sans-serif;
+    display: inline;
+}
+
+.btn-primary{
+    background-color: #00b2a0;
+    border-color: #015f55;
+}
+
+.btn-primary:hover{
+    background-color: #00796d;
+    border-color: #015f55;
+}
+
+.btn-primary:active, .btn-primary:focus{
+    background-color: #00796d;
+    border-color: #015f55;
+}
+
+
+#start, #reset{
+    margin: 10px;
+    background-color: #d6b841;
+    border-color: #a78f32;
+}
+
+#pomodoro{
+/*   padding-top: 78px;*/
+   padding-top: 49px;
+   font-size: 58px;
+}
+
+
+
+
+/* sand clock for: https://codepen.io/hangsbreaker/pen/zpGKt */
+.circle{
+    position:relative;
+    margin:18px auto; /* valor por defecto: 180px*/
+    width:80px;
+    height:80px;
+    background:#ecf0f1;
+    border:solid 5px #00b2a0;
+    border-radius:100%;
+    overflow:hidden;
+    /*    animation: rotates 2s linear;
+        -webkit-animation: rotates 2s linear;*/
+}
+.up{
+    width: 30px;
+    height: 40px;
+    left:22px;
+    overflow:hidden;
+    background:#cef;
+    position:absolute;
+}
+.up:before,.up:after{
+    content:"";
+    width:30px;height:30px;
+    background:#ecf0f1;
+    position:absolute;
+    z-index:1;
+}
+.up:before{
+    top:30px;
+    left:-17px;
+    transform:rotate(45deg);
+}
+.up:after{
+    top:30px; left:17px;
+    transform:rotate(45deg);
+}
+.innera{
+    position:relative;
+    top:15px;
+    width:30px;height:30px;
+    background:#f1c40f;
+}
+
+.line{
+    position: relative;
+    top: -37px;
+    left: 14px;
+    width: 2px;
+    height: 30px;
+    background: #f1c40f;
+}
+
+.line2{
+    position: relative;
+    top: -30px;
+    left: 14px;
+    width: 2px;
+    height: 40px;
+    background: #f1c40f;
+}
+.down{
+    width: 30px;
+    height: 40px;
+    left:23px;
+    top:40px;
+    overflow:hidden;
+    background:#cef;
+    position:absolute;
+    z-index:1;
+}
+.down:before,.down:after{
+    content:"";
+    width:30px;
+    height:40px;
+    background:#ecf0f1;
+    position:absolute;
+    z-index:1;
+}
+.down:before{
+    top:-25px;
+    left:-17px;
+    transform:rotate(45deg);
+}
+.down:after{
+    top:-25px;
+    left:24px;
+    transform:rotate(45deg);
+}
+.innerb{
+    position:relative;
+    top:40px;
+    width:30px;height:30px; background:#f1c40f;
+}
+
+
+
+@keyframes rotates{
+    0%{transform:rotate(0deg);}
+    80%{transform:rotate(0deg);}
+    100%{transform:rotate(180deg);}
+}
+
+.block {
+    display: inline-block;
+/*    margin: 0 60px 0 60px;*/
+    margin: 14px 60px 23px 60px;
+}
+
+.btn{
+    margin: 0 11px 0 11px;
+}
+.btnContent{
+    margin-top: 20px;
+}
+
+#fcc{
+   color: white;
+   font-family: 'Abel', sans-serif;
+   margin-top: 300px;
+    margin-bottom: 0px;
+}
+
+#fcc a{
+   color: white;
+}
+
+
+
+/*@media only screen and (max-width: 765px) {
+    .block{
+        float: left;
+    }
+    
+    
+}*/

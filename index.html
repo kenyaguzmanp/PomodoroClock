@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+
+<html>
+    <head>
+        <title>Pomodoro Clock FCC</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+        <link href="newcss.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+        <link href="https://fonts.googleapis.com/css?family=Courgette" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Abel" rel="stylesheet">
+    </head>
+    <body>
+
+        <h1 id="pomodoro" class="text-center">Pomodoro Clock</h1>
+        <audio id="alarm" src="http://www.freesfx.co.uk/rx2/mp3s/4/16405_1460641087.mp3">
+            Your browser does not support the <code>audio</code> element.
+        </audio>
+        <div class="text-center">
+                <div class="block">
+                    <div id="timeDiv">
+                        <h2 id="title1">Session Time</h2>
+                        <br>
+                        <a href="#" class="btn btn-primary" id="minus5Clock">-</a>
+                        <h2 id="timeType"></h2>
+                        <h2 id="num">5</h2><span id="minutes1"> min</span>
+                        <a href="#" class="btn btn-primary" id="add5Clock">+</a>                  
+
+                    </div>
+                </div>
+            <br>
+
+                <div class="block" id="circleWrapp">
+                    <div class="circle">
+                        <div class="up">
+                            <div class="innera"></div>
+                            <div class="line2"></div>
+                        </div>
+
+                        <div class="down">
+
+                            <div class="innerb"></div>
+                            <div class="line"></div>
+                        </div>
+                    </div>
+                    <div id="titleContentWrap" class="titleContent">
+                        <h2 id="title1b">Session Time</h2>
+                        <br>
+                        <h2 id="num2">5</h2>
+                        <br>
+                        <h2 id="title2b">Break Time</h2>
+                        <br>
+                        <h2 id="breakNum2">5</h2>
+                        <br>
+                    </div>
+                    <div class="btnContent">
+                        <a href="#" class="btn btn-primary" id="start">Start</a>
+                        <a href="#" class="btn btn-primary" id="pause">Pause</a>
+
+                        <a href="#" class="btn btn-primary breakTime" id="pause2">Pause</a>
+                        <a href="#" class="btn btn-primary" id="resume">Resume</a>
+                        <a href="#" class="btn btn-primary breakTime" id="resume2">Resume</a>
+                        <a href="#" class="btn btn-primary" id="reset">Reset</a>
+                    </div>
+                </div>
+
+            <br>
+
+                <div class="block">
+                    <div id="breakDiv">
+                        <h2 id="title1">Break Time</h2>
+                        <br>
+                        <a href="#" class="btn btn-primary" id="minus5Break">-</a>
+                        <h2 id="breakNum">5</h2><span id="minutes2"> min</span>
+                        <a href="#" class="btn btn-primary" id="add5Break">+</a>
+
+                    </div>
+                </div>
+            </div>
+
+        <div class="text-center">
+            <p id="fcc">Coded by <a href="https://www.freecodecamp.com/kenyaguzmanp" target="_blank" >Kenya Guzmán</a></p>
+        </div>
+
+        <script src="https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.min.js"></script>    
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+        <script>
+            $(document).ready(function () {
+
+                var count = parseInt($("#num").html());
+                var breakTime = parseInt($("#breakNum").html());
+                var startTime;
+                var startBreak;
+                var counter;
+                var alarm = $("#alarm")[0]; //audio variable
+                //animation variables:
+                var innerSandPartition; //this is 45px, should be the property "top: 15px" of innera
+                var innerSand;
+                var innerSandPartition2; //this is 45px, should be the property "top: 15px" of innera
+                var innerSand2;
+
+                var breakTimeFix;
+                var innerSandPartitionDowned; //this is 45px, should be the property "top: 15px" of innera
+                var innerSandDowned;
+                var innerSandPartitionDowned2; //this is 45px, should be the property "top: 15px" of innera
+                var innerSandDowned2;
+
+                $("#reset, #pause, #resume, #pause2, #resume2, #title1b, #num2, #title2b, #breakNum2, #titleContentWrap").hide();
+                $(".line, .line2").hide();
+                $(".titleContent").hide();
+
+                //pause for working time button:
+                $("#pause").on("click", function () {
+                    $('#pause').addClass('disabled');
+                    $('#resume').removeClass('disabled');
+                    $("#reset, #resume").show();
+
+                    clearInterval(counter);
+                });
+
+                //pause for break time:
+                $("#pause2").on("click", function () {
+                    $('#pause2').addClass('disabled');
+                    $('#resume2').removeClass('disabled');
+                    $("#reset, #resume2").show();
+
+                    clearInterval(startBreak);
+                });
+
+                //resume for working time button:
+                $("#resume").on("click", function () {
+                    $('#pause').removeClass('disabled');
+                    $('#resume').addClass('disabled');
+                    $("#reset").hide();
+
+                    counter = setInterval(timer, 1000);
+                });
+
+                //resume button:
+                $("#resume2").on("click", function () {
+                    $('#pause2').removeClass('disabled');
+                    $('#resume2').addClass('disabled');
+                    $("#reset").hide();
+
+                    startBreak = setInterval(breakTimer, 1000);
+                });
+
+                //the start button:
+                $("#start").on("click", function () {
+                    $('#start').addClass('disabled'); //disable the button start to just be pressed once                
+                    $("#pause, #title1b, #num2").show();
+
+                    $("#minutes1, #minutes2").hide();
+
+
+                    breakTimeFix = parseInt($("#breakNum").html());
+
+                    initialSand();
+
+                    counter = setInterval(timer, 1000); //call to timer
+                    breakTime *= 60; //counter of breakTime in minutes
+                    count *= 60;  //counter of work time in minutes
+                    startTime = new Date();
+                }); //end of start button
+
+
+                function timer() {
+
+                    //hide variables
+                    $("#start, #minus5Clock, #add5Clock, #minus5Break, #add5Break, #breakNum, #title1, #title2, #timeType, #num").hide();
+
+                    $("#timeType").html("Session Time: ");
+                    count -= 1;
+
+                    $(".line").show();
+                    $(".titleContent").show();
+                    //function call to animation fillSand:
+                    fillSand();
+
+                    //when time is out:
+                    if (count === 0) {
+                        alarm.play(); //play alarm
+
+                        clearInterval(counter);
+                        //animation rotate circle
+                        rotateCircle();
+
+                        initialSandDowned();
+
+                        //trigger the break time:
+                        startBreak = setInterval(breakTimer, 1000);
+                        $("#num").hide();
+                    }
+
+                    if (count % 60 >= 10) {
+                        $("#num").html(Math.floor(count / 60) + ":" + count % 60);
+                        $("#num2").html(Math.floor(count / 60) + ":" + count % 60);
+                    } else {
+                        $("#num").html(Math.floor(count / 60) + ":" + "0" + count % 60);
+                        $("#num2").html(Math.floor(count / 60) + ":" + "0" + count % 60);
+
+                    }
+
+                }//end of function Timer
+
+                function breakTimer() {
+                    $("#timeType").html("Break Time: ");
+
+                    $(".line").hide();
+                    $(".line2").show();
+                    $("#pause2").show();
+                    $("#pause, #resume, #title1b, #num, #breakNum, #timetype, #num2").hide();
+
+                    $("#title2b, #breakNum2").show();
+
+                    breakTime -= 1;
+
+                    //animation
+                    fillSandDowned();
+
+
+
+                    if (breakTime === 0) {
+                        clearInterval(startBreak);
+                        alarm.play(); //play alarm
+
+                        //rotateCircle();
+                        $(".line2").hide();
+
+
+                        $("#reset").show();
+                        $("#breakNum, #timeType, #pause2, #resume2").hide();
+                    }
+                    if (breakTime % 60 >= 10) {
+                        $("#breakNum").html(Math.floor(breakTime / 60) + ":" + breakTime % 60);
+                        $("#breakNum2").html(Math.floor(breakTime / 60) + ":" + breakTime % 60);
+                    } else {
+                        $("#breakNum").html(Math.floor(breakTime / 60) + ":" + "0" + breakTime % 60);
+                        $("#breakNum2").html(Math.floor(breakTime / 60) + ":" + "0" + breakTime % 60);
+                    }
+
+                } //end of function BreakTime
+
+                //reset button:
+                $("#reset").on("click", function () {
+                    count = 5;
+                    breakTime = 5;
+
+                    resetCircleRotation();
+
+                    $("#num").html(count);
+                    $("#breakNum").html(breakTime);
+                    $('#start, #pause, #pause2').removeClass('disabled'); //able the button start
+                    $("#start, #minus5Clock, #add5Clock, #minus5Break, #add5Break, #breakNum, #num, #title1, #title2").show();
+                    $("#reset, #timeType, #pause, #resume, #pause2, #resume2, #title1b, #title2b, #breakNum2, #num2, #titleContentWrap").hide();
+                    $(".line, .line2").hide();
+
+                    $("#minutes1, #minutes2").show();
+
+                });
+
+
+                //for the Working Time:    
+                //minus 5  
+                $("#minus5Clock").on("click", function () {
+
+                    if (count > 1) {
+                        count -= 1;
+                        $("#num").html(count);
+                    } else {
+//                        console.log("count<5");
+                    }
+
+                });
+
+                //plus 5
+                $("#add5Clock").on("click", function () {
+                    count += 1;
+                    $("#num").html(count);
+
+
+                });
+
+                //for the Break Time:
+                $("#minus5Break").on("click", function () {
+
+                    if (breakTime > 1) {
+                        breakTime -= 1;
+                        $("#breakNum").html(breakTime);
+                    } else {
+//                        console.log("breakTime<5");
+                    }
+
+                });
+
+                //plus 5
+                $("#add5Break").on("click", function () {
+                    breakTime += 1;
+                    $("#breakNum").html(breakTime);
+                });
+
+
+
+                //animations:
+                function fillSand() {
+                    innerSand += innerSandPartition; //value of inner upper Sand adding the partition
+                    $(".innera").css("top", innerSand + "px"); //added the value of inner upper sand
+                    innerSand2 -= innerSandPartition2; //value of the inner lower sand minus the partition
+                    $(".innerb").css("top", innerSand2 + "px"); //added the value of inner lower sand
+                }
+
+                function initialSand() {
+                    innerSandPartition = 25 / (count * 60); //partition variable for upper Sand 
+                    innerSand = 15; //initial value for upper sand
+                    $(".innera").css("top", innerSand + "px"); //added the initial value to css 
+                    innerSandPartition2 = 25 / (count * 60); //partition value for lower sand
+                    innerSand2 = 30; //initial value for lower sand
+                    $(".innerb").css("top", innerSand2 + "px"); //added the initial value to css 
+                }
+
+                function rotateCircle() {
+                    $(".circle").css("animation", "rotates 1s linear");
+                    $(".circle").css("-webkit-animation", "rotates 1s linear");
+                    $(".circle").css("transform", "rotate(180deg)");
+                }
+
+                function initialSandDowned() {
+                    innerSandPartitionDowned = 30 / (breakTimeFix * 60); //partition variable for upper Sand
+                    innerSandDowned = -30;
+                    $(".innera").css("top", innerSandDowned + "px"); //added the initial value to css
+                    innerSandPartitionDowned2 = 25 / (breakTimeFix * 60); //partition variable for upper Sand
+                    innerSandDowned2 = -5;
+                    $(".innerb").css("top", innerSandDowned2 + "px"); //added the value of inner lower sand
+                }
+
+                function fillSandDowned() {
+                    innerSandDowned += innerSandPartitionDowned; //value of inner upper Sand adding the partition
+                    $(".innera").css("top", innerSandDowned + "px"); //added the value of inner upper sand
+                    innerSandDowned2 -= innerSandPartitionDowned2; //value of the inner lower sand minus the partition
+                    $(".innerb").css("top", innerSandDowned2 + "px"); //added the value of inner lower sand
+                }
+
+                function resetCircleRotation() {
+                    $(".circle").css("animation", "rotates 1s linear");
+                    $(".circle").css("-webkit-animation", "rotates 1s linear");
+                    $(".circle").css("transform", "rotate(0deg)");
+                }
+
+
+            }); //end of document ready
+
+
+
+        </script>
+
+    </body>
+</html>
